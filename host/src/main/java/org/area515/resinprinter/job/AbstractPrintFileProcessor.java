@@ -148,7 +148,12 @@ public abstract class AbstractPrintFileProcessor<G,E> implements PrintFileProces
 		return null;
 	}
 	
+	
 	public JobStatus performPostSlice(DataAid aid) throws ExecutionException, InterruptedException, InappropriateDeviceException, ScriptException {
+		return this.performPostSlice(aid, null);
+	}
+	
+	public JobStatus performPostSlice(DataAid aid, BufferedImage sliceImage) throws ExecutionException, InterruptedException, InappropriateDeviceException, ScriptException {
 		if (aid == null) {
 			throw new IllegalStateException("initializeDataAid must be called before this method");
 		}
@@ -169,6 +174,11 @@ public abstract class AbstractPrintFileProcessor<G,E> implements PrintFileProces
 		if (aid.slicingProfile.getgCodeShutter() != null && aid.slicingProfile.getgCodeShutter().trim().length() > 0) {
 			aid.printer.setShutterOpen(true);
 			aid.printer.getGCodeControl().executeGCodeWithTemplating(aid.printJob, aid.slicingProfile.getgCodeShutter());
+		}
+		
+		if (sliceImage != null) {
+			logger.info("ExposureStart:{}", ()->Log4jTimer.startTimer(EXPOSURE_TIMER));
+			aid.printer.showImage(sliceImage);
 		}
 		
 		//Sleep for the amount of time that we are exposing the resin.
