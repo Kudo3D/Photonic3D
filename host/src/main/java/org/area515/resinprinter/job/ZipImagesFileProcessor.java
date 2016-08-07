@@ -116,6 +116,8 @@ public class ZipImagesFileProcessor extends CreationWorkshopSceneFileProcessor i
 					
 					dataAid.printer.showImage(imageData.getImage());
 					
+					status = performPostSlice(dataAid);
+					
 					if (oldImage != null) {
 						oldImage.getImage().flush();
 					}
@@ -126,8 +128,7 @@ public class ZipImagesFileProcessor extends CreationWorkshopSceneFileProcessor i
 					} else {
 						slicePending = false;
 					}
-					
-					status = performPostSlice(dataAid);
+
 					if (status != null) {
 						return status;
 					}

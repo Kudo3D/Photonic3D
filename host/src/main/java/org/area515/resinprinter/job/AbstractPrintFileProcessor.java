@@ -174,13 +174,13 @@ public abstract class AbstractPrintFileProcessor<G,E> implements PrintFileProces
 		//Sleep for the amount of time that we are exposing the resin.
 		Thread.sleep(aid.printJob.getExposureTime());
 		
+		//Blank the screen
+		aid.printer.showBlankImage();
+		
 		if (aid.slicingProfile.getgCodeShutter() != null && aid.slicingProfile.getgCodeShutter().trim().length() > 0) {
 			aid.printer.setShutterOpen(false);
 			aid.printer.getGCodeControl().executeGCodeWithTemplating(aid.printJob, aid.slicingProfile.getgCodeShutter());
 		}
-		
-		//Blank the screen in the case that our printer doesn't have a shutter
-		aid.printer.showBlankImage();
 		
 		logger.info("ExposureTime:{}", ()->Log4jTimer.completeTimer(EXPOSURE_TIMER));
 		
